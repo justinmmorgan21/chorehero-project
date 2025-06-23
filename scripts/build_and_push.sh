@@ -1,23 +1,36 @@
 #!/bin/bash
 
-# Fail fast on any error
+# Exit on any error
 set -e
 
-echo "🚀 Building Rails API image..."
-docker build -t justinmorgan21/chorehero-backend ./chorehero-api
+# Optional: change this to version your images (e.g., v1, v2, etc.)
+VERSION=latest
 
-echo "✅ Built chorehero-backend"
+# Docker Hub username
+USERNAME=justinmorgan21
+
+# Image names
+BACKEND_IMAGE=$USERNAME/chorehero-backend:$VERSION
+FRONTEND_IMAGE=$USERNAME/chorehero-frontend:$VERSION
+
+echo "🚀 Building Rails API image..."
+docker build -t $BACKEND_IMAGE ./chorehero-api
+echo "✅ Built $BACKEND_IMAGE"
 
 echo "🚀 Building React frontend image..."
-docker build -t justinmorgan21/chorehero-frontend ./chorehero-frontend
+docker build -t $FRONTEND_IMAGE ./chorehero-frontend
+echo "✅ Built $FRONTEND_IMAGE"
 
-echo "✅ Built chorehero-frontend"
+echo "📤 Pushing backend image..."
+docker push $BACKEND_IMAGE
 
-echo "📤 Pushing backend to Docker Hub..."
-docker push justinmorgan21/chorehero-backend
+echo "📤 Pushing frontend image..."
+docker push $FRONTEND_IMAGE
 
-echo "📤 Pushing frontend to Docker Hub..."
-docker push justinmorgan21/chorehero-frontend
+echo "🔄 Updating Kubernetes deployments..."
+kubectl set image deployment/rails-api rails-api=$BACKEND_IMAGE
+kubectl set image deployment/react-frontend react-frontend=$FRONTEND_IMAGE
 
-echo "🎉 All images built and pushed successfully!"
+echo "✅ Deployments updated!"
 
+echo "🎉 All done! Images built, pushed, and deployed successfully!"
