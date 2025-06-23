@@ -1,0 +1,6 @@
+[submodule "chorehero-api"]
+	path = chorehero-api
+	url = https://github.com/justinmmorgan21/chorehero-api.git
+[submodule "chorehero-frontend"]
+	path = chorehero-frontend
+	url = https://github.com/justinmmorgan21/chorehero.git
