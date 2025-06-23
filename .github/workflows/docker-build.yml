@@ -41,3 +41,8 @@ jobs:
           push: true
           tags: justinmorgan21/chorehero-frontend:latest,justinmorgan21/chorehero-frontend:${{ github.sha }}
 
+      - name: Trigger Render deploy (Rails API)
+        run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOKS_BACKEND }}
+
+      - name: Trigger Render deploy (React Frontend)
+        run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOKS_FRONTED }}
