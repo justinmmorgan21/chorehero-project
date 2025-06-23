@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rails-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rails-api
+  template:
+    metadata:
+      labels:
+        app: rails-api
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: rails-api
+          image: justinmorgan21/chorehero-backend
+          env:
+            - name: RAILS_ENV
+              value: "production"
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: chorehero-secrets
+                  key: POSTGRES_PASSWORD
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: chorehero-secrets
+                  key: DATABASE_URL
+            - name: RAILS_MASTER_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: chorehero-secrets
+                  key: RAILS_MASTER_KEY
+          ports:
+            - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rails-api
+spec:
+  selector:
+    app: rails-api
+  ports:
+    - port: 3000
+      targetPort: 3000
+

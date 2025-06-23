@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: chorehero_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: chorehero_api_development
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./chorehero-api  # Adjust to your backend folder
+    container_name: chorehero_api
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/chorehero_api_development
+      RAILS_ENV: development
+      CHOREHERO_API_DATABASE_PASSWORD: postgres
+      RAILS_MASTER_KEY: b076db8db39f29916c650bcfcc2d7e90
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./chorehero-api:/app
+      - ./chorehero-api/config/master.key:/app/config/master.key
+    command: bash -c "rm -f tmp/pids/server.pid && bin/rails server -b 0.0.0.0"
+
+  frontend:
+    build: ./chorehero-frontend  # Adjust to your frontend folder
+    container_name: chorehero_frontend
+    depends_on:
+      - backend
+    ports:
+      - "5173:5173"  # If using Vite
+    volumes:
+      - ./chorehero-frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:3000  # Connect frontend to backend
+    command: ["npm", "run", "dev", "--", "--host"]
+
+volumes:
+  postgres_data:

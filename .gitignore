@@ -1,0 +1,5 @@
+chorehero-api/
+chorehero-frontend/
+.env.local
+.env.prod
+k8s/chorehero-secrets.yaml

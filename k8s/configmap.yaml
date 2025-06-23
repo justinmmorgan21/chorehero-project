@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: chorehero-config
+data:
+  DATABASE_HOST: postgres
+  DATABASE_NAME: chorehero_api_development
+  DATABASE_USER: postgres
+  VITE_API_URL: http://localhost:3000
+
