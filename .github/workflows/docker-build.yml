@@ -36,7 +36,10 @@ jobs:
         run: |
           cd chorehero-api
           gem install bundler
-          bundle install
+          bundle install RAILS_ENV=test
+      
+      - name: Setup test master key
+        run: echo "${{ secrets.TEST_MASTER_KEY }}" > config/credentials/test.key
 
       - name: Set up test database
         run: |
