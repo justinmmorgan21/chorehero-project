@@ -42,12 +42,12 @@ jobs:
         run: |
           cd chorehero-api
           cp config/database.yml.github config/database.yml
-          bin/rails db:create db:migrate
+          bin/rails db:create db:migrate RAILS_ENV=test
 
       - name: Run tests
         run: |
           cd chorehero-api
-          bin/rails test
+          bin/rails test RAILS_ENV=test
           
   build-and-push:
     runs-on: ubuntu-latest
