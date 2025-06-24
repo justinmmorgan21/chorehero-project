@@ -39,7 +39,7 @@ jobs:
           bundle install
       
       - name: Setup test master key
-        run: echo "${{ secrets.TEST_MASTER_KEY }}" > config/credentials/test.key
+        run: echo "${{ secrets.TEST_MASTER_KEY }}" > chorehero-api/config/credentials/test.key
 
       - name: Set up test database
         run: |
